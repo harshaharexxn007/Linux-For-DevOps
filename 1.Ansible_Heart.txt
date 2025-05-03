@@ -1,0 +1,60 @@
+Installation Steps:-
+
+yum update -y
+yum install ansible python* -y
+yum install ansible -y
+ansible --version
+[root@ansiblenode NLakshmisett]# ansible --version
+ansible [core 2.15.3]
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible
+  python version = 3.9.20 (main, Jan 25 2025, 00:00:00) [GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] (/usr/bin/python3.9)
+  jinja version = 3.1.4
+  libyaml = True
+[root@ansiblenode NLakshmisett]#
+*************************************************
+After Installing Ansible Make Sure First two "become" lines should be commented in the configuration lines
+
+# /etc/ansible/ansible.cfg
+
+If Config file is not available please add below lined in config file after creation
+[defaults]
+host_key_checking = False
+****************************************************
+Basic Playbook:-
+
+- hosts: all
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Basic Config
+      shell: hostname && df -Th 
+      register: df
+    - debug: var=df.stdout_lines
+**********************************************
+Ansible Important Commands:-
+
+ansible -i sles_inv all -m ping -k -K -u NLakshmisett					# For Pinging
+
+ansible -i sles_inv all -m shell -a "uname -ar" -k -K -u NLakshmisett			# For Adhoc
+
+ansible -i sles_inv all -m shell -a "zypper patch --category recommended --no-confirm --with-interactive && zypper patch --category security --no-confirm --with-interactive --auto-agree-with-licenses" -k -K -u NLakshmisett			        # For Patching
+
+ansible-playbook -i hosts basic.yaml -k -K -u NLakshmisett				# For Adhoc Server List
+
+ansible-playbook -i sles_inv basic.yaml -k -K -u NLakshmisett				# For All Server List
+
+ansible-playbook -i limiting_inv basic.yaml --limit=qa -k -K -u NLakshmisett		# For limiting Server List
+********************************************************************************
+
+
+
+
+
+
+
+
+
